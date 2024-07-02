@@ -36,9 +36,9 @@ jobs:
         id: pulumi_outputs
         run: |
           GIT_RUNNER_IP=$(pulumi stack output git_runner_public_ip --cwd Infra)
-          MASTER_NODE_IP=$(pulumi stack output master_node_private_ip --cwd Infra)
-          WORKER_NODE1_IP=$(pulumi stack output worker_node1_private_ip --cwd Infra)
-          WORKER_NODE2_IP=$(pulumi stack output worker_node2_private_ip --cwd Infra)
+          MASTER_NODE_IP=$(pulumi stack output master_private_ip --cwd Infra)
+          WORKER_NODE1_IP=$(pulumi stack output worker1_private_ip --cwd Infra)
+          WORKER_NODE2_IP=$(pulumi stack output worker2_private_ip --cwd Infra)
           echo "GIT_RUNNER_IP=$GIT_RUNNER_IP" >> $GITHUB_ENV
           echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
