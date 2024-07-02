@@ -91,8 +91,8 @@ jobs:
             EOF
           done
 
-      - name: Copy SSH Key to Master and Worker Nodes
-        run: |
-          for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
-            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ env.GIT_RUNNER_IP }} ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@$host
-          done
+      # - name: Copy SSH key to Master and Worker Nodes
+      #   run: |
+      #     for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
+      #       ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ env.GIT_RUNNER_IP }} ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@$host
+      #     done
