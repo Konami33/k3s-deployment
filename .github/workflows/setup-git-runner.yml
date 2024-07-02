@@ -79,8 +79,7 @@ jobs:
       - name: Install OpenSSH on Master and Worker Nodes
         run: |
           for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
-            ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }}
-            ssh -o StrictHostKeyChecking=no ubuntu@$host << "EOF"
+            ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} ssh -o StrictHostKeyChecking=no ubuntu@$host << 'EOF'
       
             sudo apt-get update -y
             sudo apt-get install -y openssh-server 
