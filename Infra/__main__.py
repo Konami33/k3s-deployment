@@ -82,31 +82,29 @@ private_route_table_association = ec2.RouteTableAssociation(
 )
 
 # Security Group for allowing SSH and k3s traffic
-security_group = ec2.SecurityGroup('security-group',
+security_group = aws.ec2.SecurityGroup("web-secgrp",
+    description='Enable SSH and K3s access',
     vpc_id=vpc.id,
-    description='Allow SSH and k3s traffic',
     ingress=[
-        SecurityGroupRuleArgs(
-            protocol='tcp',
-            from_port=22,
-            to_port=22,
-            cidr_blocks=['0.0.0.0/0'],
-        ),
-        SecurityGroupRuleArgs(
-            protocol='tcp',
-            from_port=6443,
-            to_port=6443,
-            cidr_blocks=['0.0.0.0/0'],
-        ),
+        {
+            "protocol": "tcp",
+            "from_port": 22,
+            "to_port": 22,
+            "cidr_blocks": ["0.0.0.0/0"],
+        },
+        {
+            "protocol": "tcp",
+            "from_port": 6443,
+            "to_port": 6443,
+            "cidr_blocks": ["0.0.0.0/0"],
+        },
     ],
-    egress=[
-        SecurityGroupRuleArgs(
-            protocol='-1',
-            from_port=0,
-            to_port=0,
-            cidr_blocks=['0.0.0.0/0'],
-        ),
-    ]
+    egress=[{
+        "protocol": "-1",
+        "from_port": 0,
+        "to_port": 0,
+        "cidr_blocks": ["0.0.0.0/0"],
+    }],
 )
 
 #key pair
