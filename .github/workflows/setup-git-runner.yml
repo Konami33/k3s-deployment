@@ -47,16 +47,16 @@ jobs:
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
+      - name: Set up SSH agent
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: SSH to Runner EC2 and install GitHub Runner and Ansible
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
           sudo apt-get update -y
           sudo apt-get install -y openssh-server ansible
-
-          # Check if SSH key already exists and create if it doesn't
-          if [ ! -f ~/.ssh/id_rsa ]; then
-            ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
-          fi
 
           # Start the SSH service
           sudo systemctl start ssh
@@ -79,9 +79,11 @@ jobs:
       - name: Install OpenSSH on Master and Worker Nodes
         run: |
           for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
-            ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} ssh -o StrictHostKeyChecking=no ubuntu@$host << 'EOF'
+            ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }}
+            ssh -o StrictHostKeyChecking=no ubuntu@$host << 'EOF'
+      
             sudo apt-get update -y
-            sudo apt-get install -y openssh-server
+            sudo apt-get install -y openssh-server 
 
             # Start the SSH service
             sudo systemctl start ssh
@@ -92,5 +94,5 @@ jobs:
       - name: Copy SSH Key to Master and Worker Nodes
         run: |
           for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
-            ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@$host
+            ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ env.GIT_RUNNER_IP }} ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@$host
           done
