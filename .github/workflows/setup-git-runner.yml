@@ -54,7 +54,7 @@ jobs:
 
       - name: SSH to Runner EC2 and install GitHub Runner and Ansible
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << "EOF"
           sudo apt-get update -y
           sudo apt-get install -y openssh-server ansible
 
@@ -80,7 +80,7 @@ jobs:
         run: |
           for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
             ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }}
-            ssh -o StrictHostKeyChecking=no ubuntu@$host << EOF
+            ssh -o StrictHostKeyChecking=no ubuntu@$host << "EOF"
       
             sudo apt-get update -y
             sudo apt-get install -y openssh-server 
@@ -90,9 +90,3 @@ jobs:
             sudo systemctl enable ssh
             EOF
           done
-
-      # - name: Copy SSH key to Master and Worker Nodes
-      #   run: |
-      #     for host in ${{ env.MASTER_NODE_IP }} ${{ env.WORKER_NODE1_IP }} ${{ env.WORKER_NODE2_IP }}; do
-      #       ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ env.GIT_RUNNER_IP }} ssh-copy-id -i ~/.ssh/id_rsa.pub -o StrictHostKeyChecking=no ubuntu@$host
-      #     done
