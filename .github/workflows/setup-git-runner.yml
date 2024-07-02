@@ -2,7 +2,7 @@ name: Setup GitHub Runner and Ansible
 
 on:
   workflow_run:
-    workflows: ["Create AWS Infra using Pulumi"]
+    workflows: ["Deploy Infrastructure"]
     types:
       - completed
 
