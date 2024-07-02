@@ -54,7 +54,7 @@ jobs:
 
       - name: SSH to Runner EC2 and install GitHub Runner and Ansible
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
           sudo apt-get update -y
           sudo apt-get install -y openssh-server ansible
 
@@ -70,7 +70,7 @@ jobs:
 
           tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
 
-          ./config.sh --url https://github.com/Konami33/k3s-deployment --token AQGGSGRCPYZ7W43HHE6H5OLGQRE2K --name "Git Runner"
+          ./config.sh --url https://github.com/Konami33/k3s-deployment --token AQGGSGTLFAJGHZVSWV4XCZTGQRIEO --name "Git Runner"
 
           sudo ./svc.sh install
           sudo ./svc.sh start
