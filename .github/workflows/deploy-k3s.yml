@@ -1,10 +1,9 @@
 name: Deploy k3s
 
 on:
-  workflow_run:
-    workflows: ["Setup GitHub Runner and Ansible"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   deploy_k3s:
@@ -44,30 +43,31 @@ jobs:
           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
           echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
 
-      - name: Copy SSH key to GitHub Runner
+      - name: Generate SSH key pair
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-          echo "${{ secrets.PUBLIC_KEY }}" | tee -a /home/ubuntu/.ssh/id_rsa.pub
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | tee -a /home/ubuntu/.ssh/id_rsa
-          chmod 600 /home/ubuntu/.ssh/id_rsa
-          EOF
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+          cat ~/.ssh/id_rsa.pub
+
+      - name: Add public key to GIT_RUNNER_IP authorized_keys
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} "mkdir -p ~/.ssh && echo \"$(cat ~/.ssh/id_rsa.pub)\" >> ~/.ssh/authorized_keys"
 
       - name: Copy SSH key to Master Node
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-          scp -o StrictHostKeyChecking=no /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}:/home/ubuntu/.ssh/authorized_keys
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}:/home/ubuntu/.ssh/authorized_keys
           EOF
 
       - name: Copy SSH key to Worker Node 1
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-          scp -o StrictHostKeyChecking=no /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}:/home/ubuntu/.ssh/authorized_keys
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}:/home/ubuntu/.ssh/authorized_keys
           EOF
 
       - name: Copy SSH key to Worker Node 2
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-          scp -o StrictHostKeyChecking=no /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}:/home/ubuntu/.ssh/authorized_keys
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}:/home/ubuntu/.ssh/authorized_keys
           EOF
 
       - name: Copy Ansible directory to GitHub Runner
@@ -92,7 +92,7 @@ jobs:
           workers
           EOT
 
-          # Run Ansible playbook to provision
+          # Run Ansible playbook
           cd /home/ubuntu/ansible
           ansible-playbook -i inventory/hosts.ini site.yml
           EOF
