@@ -1,0 +1,4 @@
+---
+- name: Join the k3s cluster
+  shell: |
+    curl -sfL https://get.k3s.io | K3S_URL=https://{{ hostvars['master-node']['master_ip'].stdout }}:6443 K3S_TOKEN={{ hostvars['master-node']['k3s_token'].stdout }} sh -

@@ -4,7 +4,7 @@
 
 This project aims to automate the deployment of a lightweight Kubernetes distribution (k3s) on AWS using `GitHub Actions` for orchestration, `Pulumi` for infrastructure as code (IaC), and `Ansible` for configuration management.
 
-![alt text](image-2.png)
+![alt text](./images/image-2.png)
 
 ### Key Components
 
@@ -47,7 +47,7 @@ The deployment process involves the following steps:
 4. **GitHub Action 2**: A second GitHub Actions workflow is triggered to install self-hosted Git runner and install Ansible in the Git-runner public instance making it the control node for Ansible automation
 5. **GitHUb Action 3**: The Ansible playbook is executed to install and configure k3s on the private EC2 instances.
 
-![alt text](image-1.png)
+![alt text](./images/image-1.png)
 
 
 ## Setup Pulumi Project
@@ -270,17 +270,17 @@ cd ~/.ssh
 
 ### 3. Get the Public Key and Add It to GitHub Secrets
 
-1. Open the `id_rsa.pub` file and copy its contents.
+1. Open the `id_ed25519.pub` file and copy its contents.
    
    ```sh
-   cat id_rsa.pub
+   cat id_ed25519.pub
    ```
-2. Open the `id_rsa` file and copy its contents.
+2. Open the `id_ed25519` file and copy its contents.
    
    ```sh
-   cat id_rsa
+   cat id_ed25519
    ```
-   ![alt text](image.png)
+   ![alt text](./images/image.png)
 
 ## Save secrets and AWS credentials as Github secrets
 
@@ -288,9 +288,9 @@ cd ~/.ssh
 2. Navigate to **Settings** > **Secrets and variables** > **Actions** > **New repository secret**.
 3. Add these secrets named:
 
-  - `PUBLIC_KEY` -> `id_rsa.pub`
+  - `PUBLIC_KEY` -> `id_ed25519.pub`
 
-  - `SSH_PRIVATE_KEY` -> `id_rsa`
+  - `SSH_PRIVATE_KEY` -> `id_ed25519`
 
   - `AWS_ACCESS_KEY_ID` -> `AWS access key`
 

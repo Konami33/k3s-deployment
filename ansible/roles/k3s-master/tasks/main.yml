@@ -1,0 +1,18 @@
+---
+- name: Download and install k3s
+  shell: |
+    curl -sfL https://get.k3s.io | sh -
+
+- name: Set file permission
+  shell: |
+    sudo chmod 644 /etc/rancher/k3s/k3s.yaml
+
+- name: Get k3s token
+  shell: "cat /var/lib/rancher/k3s/server/node-token"
+  register: k3s_token
+  changed_when: false
+
+- name: Get master node IP
+  shell: "hostname -I | awk '{print $1}'"
+  register: master_ip
+  changed_when: false
