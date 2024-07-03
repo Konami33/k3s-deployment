@@ -1,9 +1,10 @@
 name: Deploy k3s
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Setup GitHub Runner and Ansible"]
+    types:
+      - completed
 
 jobs:
   deploy_k3s:

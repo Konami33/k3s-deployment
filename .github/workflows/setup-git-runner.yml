@@ -1,9 +1,10 @@
 name: Setup GitHub Runner and Ansible
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Deploy Infrastructure"]
+    types:
+      - completed
 
 jobs:
   setup_runner:
