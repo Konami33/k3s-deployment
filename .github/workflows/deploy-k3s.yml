@@ -42,7 +42,7 @@ jobs:
           echo "GIT_RUNNER_IP=$GIT_RUNNER_IP" >> $GITHUB_ENV
           echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
-          echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_EN
+          echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
 
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
