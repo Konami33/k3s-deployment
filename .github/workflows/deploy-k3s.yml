@@ -1,98 +1,100 @@
-# name: Deploy k3s
+name: Deploy k3s
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - Infra/**
 
-# jobs:
-#   deploy_k3s:
-#     runs-on: ubuntu-latest
+jobs:
+  deploy_k3s:
+    runs-on: ubuntu-latest
 
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#       - name: Configure AWS credentials
-#         uses: aws-actions/configure-aws-credentials@v2
-#         with:
-#           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws-region: ap-southeast-1
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-1
 
-#       - name: Pulumi login
-#         env:
-#           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-#         run: pulumi login
+      - name: Pulumi login
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+        run: pulumi login
 
-#       - name: Pulumi stack select
-#         run: pulumi stack select Konami33/k3s_infra/dev --cwd Infra
+      - name: Pulumi stack select
+        run: pulumi stack select Konami33/k3s_infra/dev --cwd Infra
 
-#       - name: Pulumi refresh
-#         run: pulumi refresh --yes --cwd Infra
+      - name: Pulumi refresh
+        run: pulumi refresh --yes --cwd Infra
 
-#       - name: Save Pulumi outputs
-#         id: pulumi_outputs
-#         run: |
-#           GIT_RUNNER_IP=$(pulumi stack output git_runner_public_ip --cwd Infra)
-#           MASTER_NODE_IP=$(pulumi stack output master_private_ip --cwd Infra)
-#           WORKER_NODE1_IP=$(pulumi stack output worker1_private_ip --cwd Infra)
-#           WORKER_NODE2_IP=$(pulumi stack output worker2_private_ip --cwd Infra)
-#           echo "GIT_RUNNER_IP=$GIT_RUNNER_IP" >> $GITHUB_ENV
-#           echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
-#           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
-#           echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
+      - name: Save Pulumi outputs
+        id: pulumi_outputs
+        run: |
+          GIT_RUNNER_IP=$(pulumi stack output git_runner_public_ip --cwd Infra)
+          MASTER_NODE_IP=$(pulumi stack output master_private_ip --cwd Infra)
+          WORKER_NODE1_IP=$(pulumi stack output worker1_private_ip --cwd Infra)
+          WORKER_NODE2_IP=$(pulumi stack output worker2_private_ip --cwd Infra)
+          echo "GIT_RUNNER_IP=$GIT_RUNNER_IP" >> $GITHUB_ENV
+          echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
+          echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
+          echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
 
-#       - name: Generate SSH key pair
-#         run: |
-#           ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
-#           cat ~/.ssh/id_rsa.pub
+      - name: Generate SSH key pair
+        run: |
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+          cat ~/.ssh/id_rsa.pub
 
-#       - name: Add public key to GIT_RUNNER_IP authorized_keys
-#         run: |
-#           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} "mkdir -p ~/.ssh && echo \"$(cat ~/.ssh/id_rsa.pub)\" >> ~/.ssh/authorized_keys"
+      - name: Add public key to GIT_RUNNER_IP authorized_keys
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} "mkdir -p ~/.ssh && echo \"$(cat ~/.ssh/id_rsa.pub)\" >> ~/.ssh/authorized_keys"
 
-#       - name: Copy SSH key to Master Node
-#         run: |
-#           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-#           scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}:/home/ubuntu/.ssh/authorized_keys
-#           EOF
+      - name: Copy SSH key to Master Node
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}:/home/ubuntu/.ssh/authorized_keys
+          EOF
 
-#       - name: Copy SSH key to Worker Node 1
-#         run: |
-#           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-#           scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}:/home/ubuntu/.ssh/authorized_keys
-#           EOF
+      - name: Copy SSH key to Worker Node 1
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}:/home/ubuntu/.ssh/authorized_keys
+          EOF
 
-#       - name: Copy SSH key to Worker Node 2
-#         run: |
-#           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
-#           scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}:/home/ubuntu/.ssh/authorized_keys
-#           EOF
+      - name: Copy SSH key to Worker Node 2
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << EOF
+          scp -o StrictHostKeyChecking=no ~/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}:/home/ubuntu/.ssh/authorized_keys
+          EOF
 
-#       - name: Copy Ansible directory to GitHub Runner
-#         run: |
-#           scp -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/ansible ubuntu@${{ env.GIT_RUNNER_IP }}:/home/ubuntu/
+      - name: Copy Ansible directory to GitHub Runner
+        run: |
+          scp -o StrictHostKeyChecking=no -r $GITHUB_WORKSPACE/ansible ubuntu@${{ env.GIT_RUNNER_IP }}:/home/ubuntu/
 
-#       - name: SSH into GitHub Runner and run Ansible playbook
-#         run: |
-#           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
+      - name: SSH into GitHub Runner and run Ansible playbook
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
 
-#           # Create inventory file with dynamic IPs
-#           cat <<EOT > /home/ubuntu/ansible/inventory/hosts.ini
-#           [master]
-#           master-node ansible_host=${{ env.MASTER_NODE_IP }}
+          # Create inventory file with dynamic IPs
+          cat <<EOT > /home/ubuntu/ansible/inventory/hosts.ini
+          [master]
+          master-node ansible_host=${{ env.MASTER_NODE_IP }}
 
-#           [workers]
-#           worker-node-1 ansible_host=${{ env.WORKER_NODE1_IP }}
-#           worker-node-2 ansible_host=${{ env.WORKER_NODE2_IP }}
+          [workers]
+          worker-node-1 ansible_host=${{ env.WORKER_NODE1_IP }}
+          worker-node-2 ansible_host=${{ env.WORKER_NODE2_IP }}
 
-#           [k3s_cluster:children]
-#           master
-#           workers
-#           EOT
+          [k3s_cluster:children]
+          master
+          workers
+          EOT
 
-#           # Run Ansible playbook
-#           cd /home/ubuntu/ansible
-#           ansible-playbook -i inventory/hosts.ini site.yml
-#           EOF
+          # Run Ansible playbook
+          cd /home/ubuntu/ansible
+          ansible-playbook -i inventory/hosts.ini site.yml
+          EOF
