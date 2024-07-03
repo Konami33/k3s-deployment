@@ -42,25 +42,12 @@ jobs:
           echo "GIT_RUNNER_IP=$GIT_RUNNER_IP" >> $GITHUB_ENV
           echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
-          echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
-
-      - name: Generate SSH key
-        run: |
-          ssh-keygen -t rsa -b 4096 -f ./id_rsa -N ""
-
-      - name: Copy SSH key to GitHub Runner
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ env.GIT_RUNNER_IP }}
-          username: ubuntu
-          key: ${{ runner.workspace }}/id_rsa
-          source_files: ${{ runner.workspace }}/id_rsa.pub
-          target_directory: /home/ubuntu
+          echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_EN
 
       - name: Set up SSH agent
         uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ runner.workspace }}/id_rsa
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Copy Ansible directory to GitHub Runner
         run: |
