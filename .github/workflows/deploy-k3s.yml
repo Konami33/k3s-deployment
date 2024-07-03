@@ -92,7 +92,7 @@ jobs:
           workers
           EOT
 
-          # Run Ansible playbook
+          # Run Ansible playbook to provision
           cd /home/ubuntu/ansible
           ansible-playbook -i inventory/hosts.ini site.yml
           EOF
