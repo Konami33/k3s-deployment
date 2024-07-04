@@ -67,21 +67,24 @@ jobs:
 
           EOF
 
-      - name: SSH into GitHub Runner and create SSH key
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
-          if [ ! -f /home/ubuntu/.ssh/id_rsa ]; then
-            ssh-keygen -t rsa -b 2048 -f /home/ubuntu/.ssh/id_rsa -q -N ""
-          fi
-          EOF
+      # - name: SSH into GitHub Runner and create SSH key
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
+      #     if [ ! -f ~/.ssh/id_rsa ]; then
+      #       ssh-keygen -t rsa -b 2048 -q -N "" -f ~/.ssh/id_rsa
+      #     else
+      #       echo "SSH key already exists."
+      #     fi
+      #     EOF
 
-      - name: Copy SSH public key to private instances
-        run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
-          ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}
-          ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}
-          ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}
-          EOF
+
+      # - name: Copy SSH public key to private instances
+      #   run: |
+      #     ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
+      #     ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.MASTER_NODE_IP }}
+      #     ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE1_IP }}
+      #     ssh-copy-id -i /home/ubuntu/.ssh/id_rsa.pub ubuntu@${{ env.WORKER_NODE2_IP }}
+      #     EOF
 
       - name: Run the ansible playbook
         run: |

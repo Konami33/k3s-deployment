@@ -36,7 +36,7 @@ ssh-copy-id -i ~/.ssh/id_rsa.pub ubuntu@worker-node-2-ip
 3. Now you can ssh into any instances using this command:
 
 ```sh
-ssh ubuntu@ubuntu@master-node-ip
+ssh ubuntu@master-node-ip
 ssh ubuntu@worker-node-1-ip
 ssh ubuntu@worker-node-2-ip
 ```
