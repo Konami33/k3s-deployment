@@ -73,7 +73,7 @@ nat_gateway = ec2.NatGateway(
     allocation_id=eip.id
 )
 
-# Route Table for Private Subnet
+# Route Table for Private Subnet 
 private_route_table = ec2.RouteTable(
     'private-route-table', 
     vpc_id=vpc.id,

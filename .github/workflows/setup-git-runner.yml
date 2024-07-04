@@ -1,10 +1,11 @@
 name: Setup GitHub Runner and Ansible
 
 on:
-  workflow_run:
-    workflows: ["Deploy Infrastructure"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/setup-git-runner.yml**
 
 jobs:
   setup_runner:
