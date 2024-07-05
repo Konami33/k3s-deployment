@@ -65,7 +65,7 @@ jobs:
           sed -i "s/^worker-node-2 ansible_host=.*/worker-node-2 ansible_host=${{ env.WORKER_NODE2_IP }}/" /home/ubuntu/ansible/inventory/hosts.ini
           EOF
 
-      - name: Run the ansible playbook
+      - name: Run the Ansible playbook
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
           cd ansible && ansible-playbook -i inventory/hosts.ini site.yml
