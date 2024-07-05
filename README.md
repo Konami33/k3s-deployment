@@ -4,7 +4,7 @@
 
 This project aims to automate the deployment of a *lightweight Kubernetes distribution (k3s)* on AWS using `GitHub Actions` for orchestration, `Pulumi` for infrastructure as code (IaC), and `Ansible` for configuration management.
 
-![alt text](./images/image-2.png)
+![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/image-2.png)
 
 ### Key Components
 
@@ -64,7 +64,7 @@ The deployment process involves the following steps:
 4. **GitHub Action 2**: A second GitHub Actions workflow is triggered to install self-hosted Git runner and install Ansible in the Git-runner public instance making it the control node for Ansible automation
 5. **GitHUb Action 3**: The Ansible playbook is executed to install and configure k3s on the private EC2 instances.
 
-![alt text](./images/image-1.png)
+![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/image-1.png)
 
 
 ## Setup Pulumi Project
@@ -324,7 +324,7 @@ cd ~/.ssh
    ```sh
    cat id_ed25519
    ```
-   ![alt text](./images/image.png)
+   ![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/image.png)
 
 4. Save secrets and AWS credentials as Github secrets
 
@@ -342,7 +342,7 @@ cd ~/.ssh
 
   - `PULUMI_ACCESS_TOKEN` -> `Pulumi access key`
 
-  ![Github secret](https://github.com/Konami33/k3s-deployment-automation/blob/main/images/secrets.png?raw=true)
+  ![Github secret](https://github.com/Konami33/k3s-deployment-automation/raw/main/images/secrets.png?raw=true)
 
 ## Configure GitHub Actions for Infrastructure Deployment
 
@@ -698,7 +698,7 @@ git push
 
 1. Check GitHub Actions logs 
 
-![alt text](./images/actions.png)
+![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/actions.png)
 
 2. After successful completion of the workflows, we can SSH into the Git-runner instance
 
@@ -708,7 +708,7 @@ git push
   ```sh
   ssh -i ~/.ssh/my-key-pair.pem ubuntu@<git-runner-ip>
   ```
-  ![alt text](./images/Screenshot%202024-07-04%20061633.png)
+  ![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/Screenshot%202024-07-04%20061633.png)
 
 - Now you are in the Git-runner instance
 - You check if the ansible directory is copied successfully
@@ -716,7 +716,7 @@ git push
   ls
   cd ansible
   ```  
-  ![alt text](./images/Screenshot%202024-07-05%20123554.png)
+  ![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/Screenshot%202024-07-05%20123554.png)
 
 3. SSH into Master node instance
 
@@ -732,7 +732,7 @@ git push
   ```
   here you can see the Master node and the worker node has been deployed successfully and in `ready` state
 
-  ![alt text](./images/Screenshot%202024-07-05%20113714.png)
+  ![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/Screenshot%202024-07-05%20113714.png)
 
 ## Lets deploy a NGINX pod in the k3s cluster.
 
@@ -775,7 +775,7 @@ git push
 
 Here we can see our nginx pod is deployed in the k3s cluster and working  fine.
 
-![alt text](./images/Screenshot%202024-07-05%20114808.png)
+![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/Screenshot%202024-07-05%20114808.png)
 
 ---
 
