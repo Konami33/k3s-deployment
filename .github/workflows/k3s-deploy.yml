@@ -53,9 +53,9 @@ jobs:
 
       - name: Copy SSH Private Key to Public Instance Git-runner
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > secrets.SSH_PRIVATE_KEY.pem
-          chmod 600 secrets.SSH_PRIVATE_KEY.pem
-          scp -o StrictHostKeyChecking=no secrets.SSH_PRIVATE_KEY.pem user@public-instance-ip:/path/to/destination/secrets.SSH_PRIVATE_KEY.pem
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > my-key-pair.pem
+          chmod 600 my-key-pair.pem
+          scp -o StrictHostKeyChecking=no my-key-pair.pem user@{{ env.GIT_RUNNER_IP }}:~/.ssh
       
       - name: Copy Ansible directory to GitHub Runner
         run: |
