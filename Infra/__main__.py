@@ -52,7 +52,10 @@ public_route_table = ec2.RouteTable('public-route-table',
     routes=[{
         'cidr_block': '0.0.0.0/0',
         'gateway_id': igw.id,
-    }]
+    }],
+    tags={
+        'Name': 'public-route-table',
+    }
 )
 
 # Associate the public route table with the public subnet
@@ -70,7 +73,10 @@ eip = ec2.Eip('nat-eip', vpc=True)
 nat_gateway = ec2.NatGateway(
     'nat-gateway',
     subnet_id=public_subnet.id,
-    allocation_id=eip.id
+    allocation_id=eip.id,
+    tags={
+        'Name': 'nat-gateway',
+    }
 )
 
 # Route Table for Private Subnet 
@@ -80,7 +86,10 @@ private_route_table = ec2.RouteTable(
     routes=[{
         'cidr_block': '0.0.0.0/0',
         'nat_gateway_id': nat_gateway.id,
-    }]
+    }],
+    tags={
+        'Name': 'private-route-table',
+    }
 )
 
 # Associate the private route table with the private subnet
@@ -114,6 +123,9 @@ security_group = aws.ec2.SecurityGroup("web-secgrp",
         "to_port": 0,
         "cidr_blocks": ["0.0.0.0/0"],
     }],
+    tags={
+        'Name': 'k3s-secgrp',
+    }
 )
 
 # collect the public key from github workspace

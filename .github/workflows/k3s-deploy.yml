@@ -4,7 +4,7 @@ name: K3s deployment using Ansible
 on:
   push:
     branches:
-      - main
+      - k3s-deploy
 
 jobs:
   setup_runner:
@@ -43,7 +43,6 @@ jobs:
           echo "MASTER_NODE_IP=$MASTER_NODE_IP" >> $GITHUB_ENV
           echo "WORKER_NODE1_IP=$WORKER_NODE1_IP" >> $GITHUB_ENV
           echo "WORKER_NODE2_IP=$WORKER_NODE2_IP" >> $GITHUB_ENV
-      
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
@@ -66,7 +65,7 @@ jobs:
           sed -i "s/^worker-node-2 ansible_host=.*/worker-node-2 ansible_host=${{ env.WORKER_NODE2_IP }}/" /home/ubuntu/ansible/inventory/hosts.ini
 
           EOF
-
+      
       # - name: SSH into GitHub Runner and create SSH key
       #   run: |
       #     ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
