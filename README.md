@@ -396,7 +396,7 @@ jobs:
 
 
       - name: Pulumi stack select
-        run: pulumi stack select Konami33/k3s_infra/dev --cwd Infra
+        run: pulumi stack select <YOUR_STACK_NAME> --cwd Infra
 
       - name: Pulumi refresh
         run: pulumi refresh --yes --cwd Infra
@@ -455,7 +455,7 @@ jobs:
         run: pulumi login
 
       - name: Pulumi stack select
-        run: pulumi stack select Konami33/k3s_infra/dev --cwd Infra
+        run: pulumi stack select <YOUR_STACK_NAME> --cwd Infra
 
       - name: Pulumi refresh
         run: pulumi refresh --yes --cwd Infra
@@ -492,7 +492,7 @@ jobs:
 
           tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
 
-          ./config.sh --unattended --url https://github.com/<github-account-name>/<repo-name> --token <Github runner token> --name "Git-runner"
+          ./config.sh --unattended --url https://github.com/<github-account-name>/<repo-name> --token <Github-runner-token> --name "Git-runner"
 
           sudo ./svc.sh install
           sudo ./svc.sh start
@@ -508,6 +508,9 @@ jobs:
           ansible --version
           EOF
 ```
+
+Remember to Replace the `<>` values with your corresponding values.
+
 3. Create the third GitHub action workflow: (k3s-deploy.yml)
 
 This workflow will trigger the ansible scrip to run and ansible will do the deployment of k3s in the private instances
@@ -544,7 +547,7 @@ jobs:
         run: pulumi login
 
       - name: Pulumi stack select
-        run: pulumi stack select Konami33/k3s_infra/dev --cwd Infra
+        run: pulumi stack select <YOUR_PULUMI_STACK> --cwd Infra
 
       - name: Pulumi refresh
         run: pulumi refresh --yes --cwd Infra
@@ -596,6 +599,7 @@ jobs:
 ```
 
 ## Configure ansible
+
 1. Create a directory named `ansible`
 ```sh
 mkdir ansible && cd ansible
@@ -703,6 +707,7 @@ git push
 2. After successful completion of the workflows, we can SSH into the Git-runner instance
 
 - Open an Ubuntu terminal
+
 - Run the following command to SSH into the Git-runner instance
 
   ```sh
