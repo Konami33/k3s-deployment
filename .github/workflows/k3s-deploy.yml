@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+    paths:
+      - ansible/**
 
 jobs:
   setup_runner:

@@ -480,6 +480,4 @@ jobs:
           EOT  
 
 ```
-
-
 This will setup our first portion of the lab. In the next lab we will automate the k3s cluster deployment using ansible playbook.
