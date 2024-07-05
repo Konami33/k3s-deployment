@@ -10,8 +10,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - .github/workflows/setup-git-runner.yml/**
     
 
 jobs:
@@ -80,7 +78,7 @@ jobs:
           fi
           EOF
       
-      - name: SSH to Runner EC2 and install Ansible
+      - name: SSH to Runner instance and install Ansible
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
           sudo apt-get update -y
