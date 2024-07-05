@@ -55,7 +55,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > my-key-pair.pem
           chmod 600 my-key-pair.pem
-          scp -o StrictHostKeyChecking=no my-key-pair.pem ubuntu@{{ env.GIT_RUNNER_IP }}:~/.ssh
+          scp -o StrictHostKeyChecking=no my-key-pair.pem ubuntu@${{ env.GIT_RUNNER_IP }}:~/.ssh/
       
       - name: Copy Ansible directory to GitHub Runner
         run: |
