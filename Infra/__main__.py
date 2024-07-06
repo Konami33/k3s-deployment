@@ -10,7 +10,7 @@ config = pulumi.Config()
 instance_type = 't2.micro' # use the preferred one
 ami = "ami-060e277c0d4cce553"
 
-
+# create vpc
 vpc = ec2.Vpc(
     'my-vpc',
     cidr_block='10.0.0.0/16',

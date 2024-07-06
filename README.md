@@ -511,7 +511,15 @@ jobs:
           EOF
 ```
 
-Remember to Replace the `<>` values with your corresponding values.
+**NOTE: Remember to Replace the `<>` values with your corresponding values.**
+
+Now push it the Github repository to trigger these two workflow to create the AWS infra and setup Git-runner.
+
+```sh
+git add .
+git commit -m "Infra create and config runner"
+git push
+```
 
 3. Create the third GitHub action workflow: (k3s-deploy.yml)
 
@@ -693,11 +701,11 @@ host_key_checking = False
 
 ## Push changes to the github repository
 
-After creating all the files locally, we have to push to the github repository to trigger the GitHub action
+After creating the Ansiblefiles locally, we have to push to the github repository to trigger the `K3s deployment using Ansible` GitHub action.
 
 ```sh
 git add .
-git commit -m "build and deploy"
+git commit -m "Run ansible to provision k3s"
 git push
 ```
 ## Verification
@@ -709,6 +717,8 @@ git push
 2. After successful completion of the workflows, we can SSH into the Git-runner instance
 
 - Open an Ubuntu terminal
+
+- Convert the private key into a pem file.
 
 - Run the following command to SSH into the Git-runner instance
 
