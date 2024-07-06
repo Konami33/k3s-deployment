@@ -1,11 +1,11 @@
 ---
-- name: Update and upgrade apt packages
+- name: Update and upgrade apt packages for ubuntu
   apt:
     update_cache: yes
     upgrade: dist
     force_apt_get: yes
 
-- name: Install dependencies
+- name: Install necessary dependencies
   apt:
     name: 
       - curl
