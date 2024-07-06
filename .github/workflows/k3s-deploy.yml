@@ -2,11 +2,17 @@
 name: K3s deployment using Ansible
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - ansible/**
+  workflow_run:
+    workflows: ["Setup GitHub Runner and Ansible"]
+    types:
+      - completed
+
+# on:
+#   push:
+#     branches:
+#       - main
+#     paths:
+#       - ansible/**
 
 jobs:
   setup_runner:
