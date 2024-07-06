@@ -10,7 +10,7 @@ on:
   push:
     branches:
       - main
-      
+
 jobs:
   setup_runner:
     runs-on: ubuntu-latest
@@ -57,7 +57,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: SSH to Runner EC2 and install GitHub Runner
+      - name: SSH into Runner EC2 and install Git Runner
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
             if [ ! -d "actions-runner" ]; then
@@ -79,7 +79,7 @@ jobs:
           EOF
 
       
-      - name: SSH to Runner instance and install Ansible
+      - name: SSH into Runner instance and install Ansible
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
           sudo apt-get update -y
