@@ -35,10 +35,12 @@ K3s-deployment-automation/
 │   └── ...                   # Other Pulumi project files and configurations
 ├── .github/                  # GitHub Actions workflows directory
 │   └── workflows/
-│       ├── infra.yml         # GitHub Actions workflow for deploying infrastructure
-│       └── setup-git-runner.yml    # GitHub Actions workflow for deploying K3s
+│       ├── infra.yml          # GitHub Actions workflow file for deploying infra
+│       ├── setup-git-runner.yml         # GitHub Actions workflow for setup git runner
+│       └── k3s-deploy.yml    # GitHub Actions workflow for deploying K3s
+│       
 ├── ansible/
-    ├── ansible.cfg           # ansible configuration file
+│   ├── ansible.cfg           # ansible configuration file
     ├── inventory/            # inventory direcory for hostnames
     │   └── hosts.ini
     ├── roles/                  
@@ -54,7 +56,7 @@ K3s-deployment-automation/
     └── site.yml
 .
 .
-|...                       # Other project files and directories
+...                            # Other project files and directories
 ```
 
 ## Deployment Process
