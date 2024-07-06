@@ -16,10 +16,10 @@ This project aims to automate the deployment of a *lightweight Kubernetes distri
 
 Before proceeding, ensure you have the following:
 
-- An AWS account with appropriate IAM permissions.
-- Pulumi CLI installed locally and authenticated with your Pulumi account and a PULUMI access token.
+- An AWS account with appropriate `IAM` permissions.
+- `Pulumi` installed locally and authenticated with your Pulumi account and a `PULUMI access token`.
 - GitHub repository set up to host your Pulumi project.
-- Access to GitHub Secrets to securely store credentials and sensitive information.
+- Access to GitHub `Secrets` to securely store credentials and sensitive information.
 
 ## Project Structure
 The project is organized into the following structure:
@@ -61,9 +61,9 @@ K3s-deployment-automation/
 
 ## Deployment Process
 The deployment process involves the following steps:
-1. **GitHub Actions 1**: A GitHub Actions workflow is triggered by a push event to the main branch
-2. **Pulumi**: The Pulumi Python script is executed to provision the AWS resources
-4. **GitHub Action 2**: A second GitHub Actions workflow is triggered to install self-hosted Git runner and install Ansible in the Git-runner public instance making it the control node for Ansible automation
+1. **GitHub Actions 1**: A GitHub Actions workflow is triggered by a push event to the main branch which setup necessary AWS infrasture.
+2. **Pulumi**: The Pulumi Python script is executed to provision the AWS resources.
+4. **GitHub Action 2**: A second GitHub Actions workflow is triggered to install self-hosted Git runner and install Ansible in the Git-runner public instance making it the control node for Ansible automation.
 5. **GitHUb Action 3**: The Ansible playbook is executed to install and configure k3s on the private EC2 instances.
 
 ![alt text](https://github.com/Konami33/k3s-deployment/raw/main/images/image-1.png)
@@ -91,8 +91,9 @@ The deployment process involves the following steps:
 Write Python scripts (`__main__.py` or similar) to define AWS resources using Pulumi's AWS SDK.
 The following resources are defined in the `__main__.py` file:
 
-<details>
-  <summary>__main.py__</summary>
+<!-- <details>
+  <summary>__main.py__</summary> -->
+  <!-- </details> -->
 
 ```python
 import os
@@ -286,7 +287,7 @@ pulumi.export('worker1_private_ip', worker_instance_1.private_ip)
 pulumi.export('worker2_private_ip', worker_instance_2.private_ip)
 ```
 
-</details>
+<!-- </details> -->
 
 3. **Commit Pulumi Project to GitHub**
 
@@ -398,7 +399,7 @@ jobs:
 
 
       - name: Pulumi stack select
-        run: pulumi stack select <YOUR_STACK_NAME> --cwd Infra
+        run: pulumi stack select <YOUR_PULUMI_STACK_NAME> --cwd Infra
 
       - name: Pulumi refresh
         run: pulumi refresh --yes --cwd Infra
@@ -434,7 +435,6 @@ on:
     workflows: ["Deploy Infrastructure"]
     types:
       - completed
-    
 
 jobs:
   setup_runner:
@@ -482,25 +482,29 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: SSH to Runner EC2 and install GitHub Runner
+      - name: SSH into Runner EC2 and install Git Runner
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
-          
-          mkdir actions-runner && cd actions-runner
+            if [ ! -d "actions-runner" ]; then
+              mkdir actions-runner && cd actions-runner
 
-          curl -o actions-runner-linux-x64-2.317.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.317.0/actions-runner-linux-x64-2.317.0.tar.gz
+              curl -o actions-runner-linux-x64-2.317.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.317.0/actions-runner-linux-x64-2.317.0.tar.gz
 
-          echo "9e883d210df8c6028aff475475a457d380353f9d01877d51cc01a17b2a91161d  actions-runner-linux-x64-2.317.0.tar.gz" | shasum -a 256 -c
+              echo "9e883d210df8c6028aff475475a457d380353f9d01877d51cc01a17b2a91161d  actions-runner-linux-x64-2.317.0.tar.gz" | shasum -a 256 -c
 
-          tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
+              tar xzf ./actions-runner-linux-x64-2.317.0.tar.gz
 
-          ./config.sh --unattended --url https://github.com/<github-account-name>/<repo-name> --token <Github-runner-token> --name "Git-runner"
+              ./config.sh --url https://github.com/Konami33/k3s-deployment --token <GIT_RUNNER_TOKEN> --name "Git-runner"
 
-          sudo ./svc.sh install
-          sudo ./svc.sh start
+              sudo ./svc.sh install
+              sudo ./svc.sh start
+            else
+              echo "actions-runner directory already exists. Skipping installation."
+            fi
           EOF
+
       
-      - name: SSH to Runner instance and install Ansible
+      - name: SSH into Runner instance and install Ansible
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ env.GIT_RUNNER_IP }} << 'EOF'
           sudo apt-get update -y
